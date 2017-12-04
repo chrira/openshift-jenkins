@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.10">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <io.fabric8.jenkins.openshiftsync.BuildConfigProjectProperty plugin="openshift-sync@0.1.24">
+      <uid></uid>
+      <namespace></namespace>
+      <name></name>
+      <resourceVersion></resourceVersion>
+    </io.fabric8.jenkins.openshiftsync.BuildConfigProjectProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers/>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.30">
+    <script>// This step should not normally be used in your script. Consult the inline help for details.
+podTemplate(cloud: &apos;openshift&apos;, inheritFrom: &apos;nodejs&apos;, label: &apos;nodejss&apos;, name: &apos;jnlp&apos;, nodeSelector: &apos;&apos;, serviceAccount: &apos;&apos;, workspaceVolume: emptyDirWorkspaceVolume(false)) {
+        node(&apos;nodejss&apos;) {
+            echo &apos;Hello World&apos;
+        }
+}
+
+    </script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+</flow-definition>
