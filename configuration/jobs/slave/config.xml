@@ -16,10 +16,8 @@
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.30">
     <script>// This step should not normally be used in your script. Consult the inline help for details.
-podTemplate(cloud: &apos;openshift&apos;, inheritFrom: &apos;slave&apos;, label: &apos;myslave&apos;, name: &apos;jnlp&apos;, nodeSelector: &apos;&apos;, serviceAccount: &apos;&apos;, workspaceVolume: emptyDirWorkspaceVolume(false)) {
-        node(&apos;myslave&apos;) {
-            echo &apos;Hello World&apos;
-        }
+node(&apos;slave&apos;) {
+    echo &apos;Hello World&apos;
 }
 
     </script>
