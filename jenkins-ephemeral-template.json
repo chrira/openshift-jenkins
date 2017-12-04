@@ -251,7 +251,8 @@
         "generation": 2,
         "creationTimestamp": null,
         "labels": {
-            "app": "slave"
+            "app": "slave",
+            "role": "jenkins-slave"
         }
       },
       "spec": {
