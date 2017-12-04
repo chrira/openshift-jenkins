@@ -241,6 +241,37 @@
          "type": "ClusterIP",
          "sessionAffinity": "None"
        }
+    },
+
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "slave",
+        "generation": 2,
+        "creationTimestamp": null,
+        "labels": {
+            "app": "slave"
+        }
+      },
+      "spec": {
+        "lookupPolicy": {
+          "local": false
+        },
+        "tags": [
+          {
+            "name": "latest",
+            "from": {
+              "kind": "DockerImage",
+              "name": "jenkinsci/slave"
+            },
+            "generation": 2,
+            "importPolicy": {}
+          }
+        ]
+      },
+      "status": {
+      }
     }
   ],
   "parameters": [
