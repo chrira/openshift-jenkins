@@ -4,6 +4,14 @@
 # configuration script for the OpenShift environment
 
 
+oc new-project craaflaub-jenkins2
+
+
+oc process -f jenkins-s2i-template.json \
+  | oc apply -f -
+
+
+
 oc new-project craaflaub-jenkins
 
 oc process -f jenkins-ephemeral-template.json \

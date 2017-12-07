@@ -54,7 +54,23 @@
         "creationTimestamp": null
       },
       "spec": {
-        "triggers": [],
+        "triggers": [
+          {
+              "github": {
+                  "secret": "k5Yk8dUw5e1pV97hURpM"
+              },
+              "type": "GitHub"
+          },
+          {
+              "generic": {
+                  "secret": "60JTaQ7AFmwgv0o77plv"
+              },
+              "type": "Generic"
+          },
+          {
+            "type": "ConfigChange"
+          }
+        ],
         "runPolicy": "Serial",
         "source": {
           "type": "Git",
