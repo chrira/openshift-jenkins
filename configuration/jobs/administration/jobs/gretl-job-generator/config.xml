@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Generate Jenkins-Jobs for every GRETL-Job found in the Git repository.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.3.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>git://github.com/chrira/gretljobs.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.66">
+      <scriptText>
+println &quot; BUILD_NUMBER = ${BUILD_NUMBER}&quot;
+def base = SEED_JOB.getWorkspace().toString()
+println &apos;job base dir: &apos; + base
+
+def pipelineFiles = new FileNameFinder().getFileNames(base, &apos;**/Jenkinsfile&apos;)
+
+for (pipelineFil in pipelineFiles) {
+
+  def relativeScriptPath = (pipelineFil - base).substring(1)
+  def _jobPath = relativeScriptPath.split(&apos;/&apos;)
+  def realJobName = _jobPath[0]
+
+  println &apos;job name: &apos; + realJobName
+
+  def releaseScript = readFileFromWorkspace(pipelineFil)
+
+  pipelineJob(realJobName) {
+    definition {
+        cps {
+            script(releaseScript)
+            sandbox()
+        }
+    }
+  }
+}
+      </scriptText>
+      <usingScriptText>true</usingScriptText>
+      <sandbox>false</sandbox>
+      <ignoreExisting>false</ignoreExisting>
+      <ignoreMissingFiles>false</ignoreMissingFiles>
+      <failOnMissingPlugin>false</failOnMissingPlugin>
+      <unstableOnDeprecation>false</unstableOnDeprecation>
+      <removedJobAction>DISABLE</removedJobAction>
+      <removedViewAction>IGNORE</removedViewAction>
+      <removedConfigFilesAction>IGNORE</removedConfigFilesAction>
+      <lookupStrategy>JENKINS_ROOT</lookupStrategy>
+    </javaposse.jobdsl.plugin.ExecuteDslScripts>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

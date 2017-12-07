@@ -1,0 +1,2 @@
+groovy:2.0
+job-dsl:1.66
