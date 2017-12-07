@@ -23,7 +23,7 @@
       "kind": "ImageStream",
       "apiVersion": "v1",
       "metadata": {
-        "name": "custom-jenkins"
+        "name": "gretl-jenkins"
       }
     },
     {
@@ -75,7 +75,7 @@
         "output": {
           "to": {
             "kind": "ImageStreamTag",
-            "name": "custom-jenkins:latest"
+            "name": "gretl-jenkins:latest"
           }
         },
         "resources": {},
@@ -109,7 +109,7 @@
               ],
               "from": {
                 "kind": "ImageStreamTag",
-                "name": "custom-jenkins:latest"
+                "name": "gretl-jenkins:latest"
               },
               "lastTriggeredImage": ""
             }
@@ -175,6 +175,10 @@
                   {
                     "name": "JNLP_SERVICE_NAME",
                     "value": "${JNLP_SERVICE_NAME}"
+                  },
+                  {
+                    "name": "GRETL_JOB_REPO_URL",
+                    "value": "${GRETL_JOB_REPO_URL}"
                   }
                 ],
                 "resources": {
@@ -293,23 +297,49 @@
       "kind": "ImageStream",
       "apiVersion": "v1",
       "metadata": {
-        "name": "slave",
+        "name": "gretl",
         "labels": {
-            "role": "jenkins-slave"
+          "role": "jenkins-slave"
         }
       },
       "spec": {
+        "lookupPolicy": {
+          "local": false
+        },
         "tags": [
           {
             "name": "latest",
+            "annotations": null,
             "from": {
               "kind": "DockerImage",
-              "name": "jenkinsci/slave"
+              "name": "gretl:latest"
             }
           }
         ]
+      }
+    },
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "gretl"
       },
-      "status": {
+      "spec": {
+        "runPolicy": "Serial",
+        "source": {
+          "type": "Binary",
+          "binary": {}
+        },
+        "strategy": {
+          "type": "Docker",
+          "dockerStrategy": {}
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "gretl:latest"
+          }
+        }
       }
     }
   ],
@@ -355,6 +385,12 @@
       "displayName": "Jenkins configuration Git repo",
       "description": "Url of the Git repo holding the Jenkins configuration.",
       "value": "https://github.com/chrira/openshift-jenkins.git"
+    },
+    {
+      "name": "GRETL_JOB_REPO_URL",
+      "displayName": "Git repo containing GRETL jobs",
+      "description": "Url of the Git repo holding the GRETL Job configurations.",
+      "value": "git://github.com/chrira/gretljobs.git"
     }
   ],
   "labels": {

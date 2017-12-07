@@ -244,35 +244,53 @@
     },
 
     {
-      "kind": "ImageStream",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "slave",
-        "generation": 2,
-        "creationTimestamp": null,
-        "labels": {
-            "app": "slave",
-            "role": "jenkins-slave"
-        }
-      },
-      "spec": {
-        "lookupPolicy": {
-          "local": false
+        "kind": "ImageStream",
+        "apiVersion": "v1",
+        "metadata": {
+            "name": "gretl",
+            "labels": {
+                "role": "jenkins-slave"
+            }
         },
-        "tags": [
-          {
-            "name": "latest",
-            "from": {
-              "kind": "DockerImage",
-              "name": "jenkinsci/slave"
+        "spec": {
+            "lookupPolicy": {
+                "local": false
             },
-            "generation": 2,
-            "importPolicy": {}
-          }
-        ]
-      },
-      "status": {
-      }
+            "tags": [
+                {
+                    "name": "latest",
+                    "annotations": null,
+                    "from": {
+                        "kind": "DockerImage",
+                        "name": "gretl:latest"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "kind": "BuildConfig",
+        "apiVersion": "v1",
+        "metadata": {
+            "name": "gretl"
+        },
+        "spec": {
+            "runPolicy": "Serial",
+            "source": {
+                "type": "Binary",
+                "binary": {}
+            },
+            "strategy": {
+                "type": "Docker",
+                "dockerStrategy": {}
+            },
+            "output": {
+                "to": {
+                    "kind": "ImageStreamTag",
+                    "name": "gretl:latest"
+                }
+            }
+        }
     }
   ],
   "parameters": [
