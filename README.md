@@ -9,10 +9,26 @@ OpenShift template and Jenkins configuration.
 
 Jenkins
 -------
+https://github.com/openshift/jenkins
+
+https://github.com/openshift/origin/blob/master/examples/jenkins/README.md
 
 OpenShift template from origin examples:
 
 https://github.com/openshift/origin/blob/master/examples/jenkins/jenkins-ephemeral-template.json
+
+
+### Seeder Job
+configuration/jobs/administration/jobs/gretl-job-generator/config.xml
+
+Creates Jenkins jobs from GRETL jobs using job DSL.
+
+
+https://github.com/jenkinsci/job-dsl-plugin/wiki
+
+https://github.com/sheehan/job-dsl-gradle-example
+
+https://jenkinsci.github.io/job-dsl-plugin/
 
 
 Alternatives

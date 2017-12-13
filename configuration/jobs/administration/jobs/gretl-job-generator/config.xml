@@ -3,7 +3,30 @@
   <actions/>
   <description>Generate Jenkins-Jobs for every GRETL-Job found in the Git repository.</description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>15</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>jobFilePath</name>
+          <description>ANT fileset pattern conventions</description>
+          <defaultValue>${GRETL_JOB_FILE_PATH}</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>jobFileName</name>
+          <description></description>
+          <defaultValue>${GRETL_JOB_FILE_NAME}</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@3.3.0">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
@@ -30,10 +53,14 @@
     <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.66">
       <scriptText>
 println &quot; BUILD_NUMBER = ${BUILD_NUMBER}&quot;
+
 def base = SEED_JOB.getWorkspace().toString()
 println &apos;job base dir: &apos; + base
 
-def pipelineFiles = new FileNameFinder().getFileNames(base, &apos;**/Jenkinsfile&apos;)
+def jobFileDefinition = &quot;$jobFilePath/$jobFileName&quot;
+println &apos;job file definition: &apos; + jobFileDefinition
+
+def pipelineFiles = new FileNameFinder().getFileNames(base, jobFileDefinition)
 
 for (pipelineFil in pipelineFiles) {
 
