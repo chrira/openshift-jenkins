@@ -55,7 +55,10 @@ for (pipelineFil in pipelineFiles) {
 
   def relativeScriptPath = (pipelineFil - base).substring(1)
   def _jobPath = relativeScriptPath.split(&apos;/&apos;)
-  def realJobName = _jobPath[0]
+
+  // take last folder for job name
+  def namePosition = _jobPath.size() &gt; 1 ? _jobPath.size() - 2 : 0
+  def realJobName = _jobPath[namePosition]
 
   println &apos;job name: &apos; + realJobName
 
