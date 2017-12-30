@@ -12,20 +12,6 @@
         <artifactNumToKeep>-1</artifactNumToKeep>
       </strategy>
     </jenkins.model.BuildDiscarderProperty>
-    <hudson.model.ParametersDefinitionProperty>
-      <parameterDefinitions>
-        <hudson.model.StringParameterDefinition>
-          <name>jobFilePath</name>
-          <description>ANT fileset pattern conventions</description>
-          <defaultValue>${GRETL_JOB_FILE_PATH}</defaultValue>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>jobFileName</name>
-          <description></description>
-          <defaultValue>${GRETL_JOB_FILE_NAME}</defaultValue>
-        </hudson.model.StringParameterDefinition>
-      </parameterDefinitions>
-    </hudson.model.ParametersDefinitionProperty>
   </properties>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@3.3.0">
     <configVersion>2</configVersion>
@@ -47,17 +33,20 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers/>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>H H/8 * * *</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.66">
-      <scriptText>
-println &quot; BUILD_NUMBER = ${BUILD_NUMBER}&quot;
+      <scriptText>println &quot;BUILD_NUMBER = ${BUILD_NUMBER}&quot;
 
 def base = SEED_JOB.getWorkspace().toString()
 println &apos;job base dir: &apos; + base
 
-def jobFileDefinition = &quot;$jobFilePath/$jobFileName&quot;
+def jobFileDefinition = &quot;${GRETL_JOB_FILE_PATH}/${GRETL_JOB_FILE_NAME}&quot;
 println &apos;job file definition: &apos; + jobFileDefinition
 
 def pipelineFiles = new FileNameFinder().getFileNames(base, jobFileDefinition)
@@ -80,8 +69,7 @@ for (pipelineFil in pipelineFiles) {
         }
     }
   }
-}
-      </scriptText>
+}</scriptText>
       <usingScriptText>true</usingScriptText>
       <sandbox>false</sandbox>
       <ignoreExisting>false</ignoreExisting>
