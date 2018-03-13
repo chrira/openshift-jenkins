@@ -7,6 +7,8 @@ Content
 -------
 OpenShift template and Jenkins configuration.
 
+Plugin list for Jenkins version: 2.89.2
+
 Jenkins
 -------
 https://github.com/openshift/jenkins
@@ -59,3 +61,12 @@ This token will be used from the deploy script.
  * this will display the token
 * Create a secret text credential on jenkins
  * ID must be like this: **OPENSHIFT_PROJECT_NAME_deploy_token**
+
+
+### Export plugin list
+Extract from [doc](https://github.com/jenkinsci/docker#preinstalling-plugins)
+
+```
+JENKINS_HOST=username:password@myhost.com:port
+curl -sSL "http://$JENKINS_HOST/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/' > plugins.txt
+```
