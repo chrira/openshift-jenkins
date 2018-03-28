@@ -64,12 +64,38 @@ for (pipelineFil in pipelineFiles) {
 
   def releaseScript = readFileFromWorkspace(pipelineFil)
 
-  pipelineJob(realJobName) {
-    definition {
+  def properties = new Properties([&apos;logRotator.numToKeep&apos;:&apos;15&apos;])
+  def propertiesFile = new File(base + &apos;/&apos; + realJobName + &apos;/job.properties&apos;)
+  if (propertiesFile.exists()) {
+    properties.load(propertiesFile.newDataInputStream())
+  }
+
+  if (properties.getProperty(&apos;triggers.cron&apos;) == null) {
+    pipelineJob(realJobName) {
+      logRotator {
+        numToKeep(properties.getProperty(&apos;logRotator.numToKeep&apos;) as Integer)
+      }
+      definition {
         cps {
-            script(releaseScript)
-            sandbox()
+          script(releaseScript)
+          sandbox()
         }
+      }
+    }
+  } else {
+    pipelineJob(realJobName) {
+      triggers {
+        cron(properties.getProperty(&apos;triggers.cron&apos;))
+      }
+      logRotator {
+        numToKeep(properties.getProperty(&apos;logRotator.numToKeep&apos;) as Integer)
+      }
+      definition {
+        cps {
+          script(releaseScript)
+          sandbox()
+        }
+      }
     }
   }
 }</scriptText>
