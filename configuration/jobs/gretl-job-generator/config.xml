@@ -70,7 +70,7 @@ for (pipelineFil in pipelineFiles) {
     properties.load(propertiesFile.newDataInputStream())
   }
 
-  if (properties.getProperty(&apos;triggers.cron&apos;) == null) {
+  if (properties.getProperty(&apos;triggers.cron&apos;) == null || &quot;${OPENSHIFT_BUILD_NAMESPACE}&quot; == &apos;agi-gretl-test&apos; || &quot;${OPENSHIFT_BUILD_NAMESPACE}&quot; == &apos;agi-gretl-integration&apos;) {
     pipelineJob(realJobName) {
       logRotator {
         numToKeep(properties.getProperty(&apos;logRotator.numToKeep&apos;) as Integer)
